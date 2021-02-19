@@ -1,4 +1,7 @@
 # coding: utf-8
+import csv
+import datetime
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -22,19 +25,32 @@ def main():
     #debug
     #print( data.title )
 
-    rank = data.find_all( class_="lazy" )
-
     hour_title = []
     str_title = ""
+    temp = []
 
+    dt_now = datetime.datetime.now()
+    dt_now = dt_now.strftime( '%Y年%m月%d日 %H:%M:%S' )
+    header = ['date', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+    
+    temp.append( dt_now )
+
+    rank = data.find_all(class_="lazy")
     for item in rank:
         title = item.find( "h2" ).text
-        hour_title.append( title )
+        temp.append( title )
         str_title += "\n" + title
         #print( title )
+    hour_title.append( temp )
 
     print( hour_title )
     LineSend( str_title )
+
+    with open('trend.csv', "a", newline="", encoding = "utf-8") as csvfile:
+        writer = csv.writer( csvfile, lineterminator='\n' )
+        #writer.writerow( header )
+        writer.writerows( hour_title )
+
 
 if __name__ == '__main__':
     main()
