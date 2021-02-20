@@ -1,7 +1,9 @@
 # coding: utf-8
 import csv
 import datetime
+import time
 
+import schedule
 import requests
 from bs4 import BeautifulSoup
 
@@ -44,7 +46,7 @@ def main():
     hour_title.append( temp )
 
     print( hour_title )
-    LineSend( str_title )
+    #LineSend( str_title )
 
     with open('trend.csv', "a", newline="", encoding = "utf-8") as csvfile:
         writer = csv.writer( csvfile, lineterminator='\n' )
@@ -53,5 +55,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    schedule.every( 1 ).hours.do( main )
 
+    while True:
+        schedule.run_pending()
+        time.sleep( 1 )
